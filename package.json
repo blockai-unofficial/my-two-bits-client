@@ -1,6 +1,6 @@
 {
   "name": "my-two-bits",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Client for My Two Bits Server: Tip to comment on Open Publish documents.",
   "main": "index.js",
   "scripts": {

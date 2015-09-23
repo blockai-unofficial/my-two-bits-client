@@ -8,7 +8,7 @@ module.exports = function(options) {
     commonWallet.login(serverRootUrl, function(err, res, body) {
       commonWallet.request({host: serverRootUrl, path: "/comments/" + sha1 }, function(err, res, body) {
         if (err || !body || res.statusCode >= 400) {
-          return callback(err, []);
+          return callback(res.statusCode, false);
         }
         var comments = JSON.parse(body);
         callback(false, comments);
@@ -28,8 +28,8 @@ module.exports = function(options) {
             "signedCommentBody": signedCommentBody
           } 
         }, function(err, res, body) {
-          if (err) {
-            return callback(err, false);
+          if (err || res.statusCode >= 400) {
+            return callback(res.statusCode, false);
           }
           var newComment = {
             commentBody: commentBody,
