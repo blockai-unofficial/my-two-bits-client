@@ -17,19 +17,25 @@ module.exports = function(options) {
   }
 
   var post = function(sha1, commentBody, callback) {
-    commonWallet.signMessage(commentBody, function(err, signedCommentBody) {
-      commonWallet.request({
-        host: serverRootUrl, 
-        path: "/comments/" + sha1, 
-        method:"POST", 
-        form: {
-          "commentBody": commentBody, 
-          "signedCommentBody": signedCommentBody
-        } 
-      }, function(err, res, body) {
-        callback(err, {
-          commentBody: commentBody,
-          address: commonWallet.address
+    commonWallet.login(serverRootUrl, function(err, res, body) {
+      commonWallet.signMessage(commentBody, function(err, signedCommentBody) {
+        commonWallet.request({
+          host: serverRootUrl, 
+          path: "/comments/" + sha1, 
+          method:"POST", 
+          form: {
+            "commentBody": commentBody, 
+            "signedCommentBody": signedCommentBody
+          } 
+        }, function(err, res, body) {
+          if (err) {
+            return callback(err, false);
+          }
+          var newComment = {
+            commentBody: commentBody,
+            address: commonWallet.address
+          }
+          callback(false, newComment);
         });
       });
     });
